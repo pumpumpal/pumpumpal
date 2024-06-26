@@ -41,7 +41,7 @@ A simple, easy to use, and powerful Discord bot.
 
 - [@angelizado](https://www.github.com/angelizado)
 - [@gvvq](https://www.github.com/gvvq)
-- [@igna](https://git.sr.ht/~igna/)
+- [@ignaigna](https://github.com/ignaigna/)
 
 
 ## Support
