@@ -10,10 +10,34 @@ from tools import services
 from tools.managers.cog import Cog
 from tools.managers.context import Context
 from tools.utilities.text import Plural
+from tools.converters import Embed
 
 
 class Fun(Cog):
     """Cog for Fun commands."""
+
+    @command(name="advice",)
+    async def advice(self, ctx: Context,):
+       """Gives an advice"""
+       import requests
+       response = requests.get('https://api.adviceslip.com/advice')
+       data = response.json()
+       advice = data['slip']['advice']
+       embed = Embed(
+       )
+       embed.set_author(
+            name=self.bot.user.display_name,
+            icon_url=self.bot.user.display_avatar,
+        )
+       embed.set_thumbnail(url="https://pomf2.lain.la/f/sorohr3w.png")
+       embed.add_field(
+            name="Advice",
+            value=(
+                f">{((advice))}"
+            ),
+            inline=True,
+        )
+       await ctx.send(embed=embed,)
 
     @command(
         name="8ball",

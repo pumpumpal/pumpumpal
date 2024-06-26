@@ -405,6 +405,22 @@ class Miscellaneous(Cog):
         await ctx.channel.send(embed=embed, files=attachments)
 
     @command(
+        name="calculate",
+        usage="(problem)",
+        example="56 + 12 - 3 x 5",
+        aliases=["calc"],
+    )
+    async def calculate(self: "Miscellaneous", ctx: Context, *, equation,):
+        """Do math calculations"""
+        import math
+        equation = equation.replace('x', '*')
+        equation = equation.replace('pi', str(math.pi))
+        equation = equation.replace('sqrt', 'math.sqrt')
+        equation = equation.replace('^', '**')
+        result = eval(equation)
+        await ctx.send(f"```{equation} = {result}```")
+
+    @command(
         name="firstmessage",
         usage="<channel>",
         example="#chat",

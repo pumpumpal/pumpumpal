@@ -638,6 +638,7 @@ class Servers(Cog):
         name="add",
         usage="(channel) (message)",
         example="#chat Thx {user.mention} :3",
+        aliases=["set"],
         parameters={
             "self_destruct": {
                 "converter": int,
