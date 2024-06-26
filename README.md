@@ -45,9 +45,12 @@ A simple, easy to use, and powerful Discord bot.
 
 ## Other repositories
 - [Website](https://github.com/angelizado/pumpumpal-web/)
+- [Ohhq Scripts](https://github.com/gvvq/script)
 
 
 ## Support
 
 For support, email angels@cock.li or join our [Discord Server](https://pumpumpal-web.vercel.app/support)
+
+### [- pumpumpal.lol](https://www.pumpumpal.lol)
 
