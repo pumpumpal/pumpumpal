@@ -21,5 +21,4 @@ asyncspotify
 async_timeout
 requests
 pydub
-uvicorn
 pynacl
