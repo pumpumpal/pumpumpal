@@ -21,9 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-# https://github.com/gvvq/script/ - Copyright.
-*----------------------------------------------------------------*
-|                                                                |
-| TM @ 2023 Ohhq.lol & Ohhq.gay & Ohhq.mom — All Rights Reserved |
-|      Part II of the Copyright Act, R.S.C., 1985, c. C-42       |
-*----------------------------------------------------------------*
+# Ohhq Scripts, Copyright.
+
+    *----------------------------------------------------------------*
+    |                                                                |
+    | TM @ 2023 Ohhq.lol & Ohhq.gay & Ohhq.mom — All Rights Reserved |
+    |      Part II of the Copyright Act, R.S.C., 1985, c. C-42       |
+    *----------------------------------------------------------------*
