@@ -11,13 +11,13 @@ A simple, easy to use, and powerful Discord bot.
 - [ ]  Fix lookup commands 
 - [ ]  Fix API
 - [ ]  Add sily commands
-- [ ]  Buy a domain 
-- [ ]  Website
+- [x]  Buy a domain
+- [x]  Website 
 
 
 ## API Usage
 
-(api.granrey.store)
+(api.pumpumpal.lol)
 #### Get commands
 
 ```http
