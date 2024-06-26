@@ -114,7 +114,7 @@ class Information(Cog):
             inline=True,
         )
         embed.set_footer(
-        text="pumpumpal | originally made by igna",
+        text="pumpumpal | (Legacy) Shiro, made by igna.",
         icon_url="https://git.sr.ht/~igna/shiro-old"
     )
         await ctx.send(embed=embed)
