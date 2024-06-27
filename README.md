@@ -1,5 +1,5 @@
 
-# pumpumpal
+# pumpumpal (beta)
 
 A simple, easy to use, and powerful Discord bot.
 
@@ -11,6 +11,7 @@ A simple, easy to use, and powerful Discord bot.
 - [ ]  Fix lookup commands 
 - [ ]  Fix API
 - [ ]  Add sily commands
+- [ ]  Move into slash
 - [x]  Buy a domain
 - [x]  Website 
 
