@@ -304,9 +304,11 @@ class Miscellaneous(Cog):
             VALUES ($1, $2)
             """,
             user.id,
-            before.name
-            if user.name != before.name
-            else (before.global_name or before.name),
+            (
+                before.name
+                if user.name != before.name
+                else (before.global_name or before.name)
+            ),
         )
 
     @loop(seconds=30)
@@ -410,13 +412,19 @@ class Miscellaneous(Cog):
         example="56 + 12 - 3 x 5",
         aliases=["calc"],
     )
-    async def calculate(self: "Miscellaneous", ctx: Context, *, equation,):
+    async def calculate(
+        self: "Miscellaneous",
+        ctx: Context,
+        *,
+        equation,
+    ):
         """Do math calculations"""
         import math
-        equation = equation.replace('x', '*')
-        equation = equation.replace('pi', str(math.pi))
-        equation = equation.replace('sqrt', 'math.sqrt')
-        equation = equation.replace('^', '**')
+
+        equation = equation.replace("x", "*")
+        equation = equation.replace("pi", str(math.pi))
+        equation = equation.replace("sqrt", "math.sqrt")
+        equation = equation.replace("^", "**")
         result = eval(equation)
         await ctx.send(f"```{equation} = {result}```")
 

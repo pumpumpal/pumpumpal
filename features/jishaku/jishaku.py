@@ -102,7 +102,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
 
         # Show websocket latency in milliseconds
         summary.append(
-            f">>> Average websocket latency is `{round(self.bot.latency * 1000, 2)}ms` with `{len(set(self.bot.walk_commands()))}` loaded features."
+            f"Average websocket latency is `{round(self.bot.latency * 1000, 2)}ms` with `{len(set(self.bot.walk_commands()))}` loaded features."
         )
 
         # pylint: disable=protected-access
