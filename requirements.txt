@@ -22,3 +22,4 @@ async_timeout
 requests
 pydub
 pynacl
+aiohttp_cors
