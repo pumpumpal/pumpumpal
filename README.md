@@ -8,9 +8,9 @@ A simple, easy to use, and powerful Discord bot.
 
 ## TODO
 
-- [ ]  Fix lookup commands 
-- [ ]  Fix API
-- [ ]  Add sily commands
+- [x]  Fix lookup commands 
+- [x]  Fix API
+- [ ]  Add silly commands
 - [ ]  Move into slash
 - [x]  Buy a domain
 - [x]  Website 

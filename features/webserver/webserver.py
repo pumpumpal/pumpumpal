@@ -49,7 +49,7 @@ class Webserver(Cog):
             return json_response({"error": "Invalid user ID"}, status=400)
 
         names = await self.bot.db.fetch(
-            "SELECT name, timestamp FROM metrics.names WHERE user_id = $1 ORDER BY timestamp DESC",
+            "SELECT name, updated_at FROM metrics.names WHERE user_id = $1 ORDER BY updated_at DESC",
             int(request.match_info["user_id"]),
         )
         if not names:
@@ -79,7 +79,7 @@ class Webserver(Cog):
             return json_response({"error": "Invalid user ID"}, status=400)
 
         avatars = await self.bot.db.fetch(
-            "SELECT avatar FROM metrics.avatars WHERE user_id = $1 ORDER BY timestamp DESC",
+            "SELECT avatar FROM metrics.avatars WHERE user_id = $1 ORDER BY updated_at DESC",
             int(request.match_info["user_id"]),
         )
         if not avatars:
