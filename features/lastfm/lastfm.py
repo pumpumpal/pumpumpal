@@ -28,7 +28,7 @@ class lastfm(Cog):
 
     async def request(self, path: str, payload: dict):
         response = await self.bot.session.get(
-            f"http://localhost:8080{path}",
+            f"https://fm.pumpumpal.lol{path}",
             params=payload,
             timeout=ClientTimeout(total=None),
         )
