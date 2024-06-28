@@ -1,0 +1,74 @@
+services:
+  bot:
+    container_name: pumpumpal
+    hostname: bot.pumpumpal.local
+    build: .
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+      - cloudflared # otherwise the bot won't be able to connect to the internet
+    env_file:
+      - .env
+    expose:
+      - "${BOT_PORT}"
+    networks:
+      - pumpumpal
+
+  postgres:
+    container_name: postgres-pumpumpal
+    hostname: postgres.pumpumpal.local
+    image: postgres:alpine
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - "${BOT_DATABASE_PORT}"
+    networks:
+      - pumpumpal
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U igna -d pumpumpal" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    container_name: redis-pumpumpal
+    hostname: redis.pumpumpal.local
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - "${BOT_REDIS_PORT}"
+    networks:
+      - pumpumpal
+    volumes:
+      - dragonflydata:/data
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cloudflared:
+    container_name: cloudflared-pumpumpal
+    hostname: cloudflared.pumpumpal.local
+    image: cloudflare/cloudflared:latest
+    restart: always
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TOKEN}
+    env_file:
+      - .env
+    networks:
+      - pumpumpal
+
+volumes:
+  db:
+  dragonflydata:
+
+
+networks:
+  pumpumpal:
+    external: true
