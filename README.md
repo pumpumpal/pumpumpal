@@ -28,7 +28,7 @@
 
 ## Support
 
-- **Email:** angels@cock.li
+- **Email:** support@pumpumpal.lol
 - **Discord:** https://pumpumpal.lol/support
 - **Website:** https://pumpumpal.lol
 
