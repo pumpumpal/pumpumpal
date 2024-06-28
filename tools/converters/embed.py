@@ -195,27 +195,35 @@ class EmbedScript:
                     .replace("{user.boost}", "Yes" if user.premium_since else "No")
                     .replace(
                         "{user.boosted_at}",
-                        str(user.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
-                        if user.premium_since
-                        else "Never",
+                        (
+                            str(user.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
+                            if user.premium_since
+                            else "Never"
+                        ),
                     )
                     .replace(
                         "{unix(user.boosted_at)}",
-                        str(int(user.premium_since.timestamp()))
-                        if user.premium_since
-                        else "Never",
+                        (
+                            str(int(user.premium_since.timestamp()))
+                            if user.premium_since
+                            else "Never"
+                        ),
                     )
                     .replace(
                         "{user.boost_since}",
-                        str(user.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
-                        if user.premium_since
-                        else "Never",
+                        (
+                            str(user.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
+                            if user.premium_since
+                            else "Never"
+                        ),
                     )
                     .replace(
                         "{unix(user.boost_since)}",
-                        str(int(user.premium_since.timestamp()))
-                        if user.premium_since
-                        else "Never",
+                        (
+                            str(int(user.premium_since.timestamp()))
+                            if user.premium_since
+                            else "Never"
+                        ),
                     )
                 )
         if moderator := kwargs.get("moderator"):
@@ -274,27 +282,35 @@ class EmbedScript:
                     )
                     .replace(
                         "{moderator.boosted_at}",
-                        str(moderator.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
-                        if moderator.premium_since
-                        else "Never",
+                        (
+                            str(moderator.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
+                            if moderator.premium_since
+                            else "Never"
+                        ),
                     )
                     .replace(
                         "{unix(moderator.boosted_at)}",
-                        str(int(moderator.premium_since.timestamp()))
-                        if moderator.premium_since
-                        else "Never",
+                        (
+                            str(int(moderator.premium_since.timestamp()))
+                            if moderator.premium_since
+                            else "Never"
+                        ),
                     )
                     .replace(
                         "{moderator.boost_since}",
-                        str(moderator.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
-                        if moderator.premium_since
-                        else "Never",
+                        (
+                            str(moderator.premium_since.strftime("%m/%d/%Y, %I:%M %p"))
+                            if moderator.premium_since
+                            else "Never"
+                        ),
                     )
                     .replace(
                         "{unix(moderator.boost_since)}",
-                        str(int(moderator.premium_since.timestamp()))
-                        if moderator.premium_since
-                        else "Never",
+                        (
+                            str(int(moderator.premium_since.timestamp()))
+                            if moderator.premium_since
+                            else "Never"
+                        ),
                     )
                 )
         if case_id := kwargs.get("case_id"):
@@ -383,15 +399,19 @@ class EmbedScript:
                 .replace("{artist.plays}", comma(lastfm["artist"]["plays"]))
                 .replace(
                     "{album}",
-                    escape_markdown(lastfm["album"]["name"])
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"])
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace(
                     "{album.name}",
-                    escape_markdown(lastfm["album"]["name"])
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"])
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace(
                     "{album.url}",
@@ -431,15 +451,19 @@ class EmbedScript:
                 )
                 .replace(
                     "{lower(album)}",
-                    escape_markdown(lastfm["album"]["name"].lower())
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"].lower())
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace(
                     "{lower(album.name)}",
-                    escape_markdown(lastfm["album"]["name"].lower())
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"].lower())
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace("{lower(track)}", escape_markdown(lastfm["name"].lower()))
                 .replace(
@@ -456,15 +480,19 @@ class EmbedScript:
                 )
                 .replace(
                     "{upper(album)}",
-                    escape_markdown(lastfm["album"]["name"].upper())
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"].upper())
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace(
                     "{upper(album.name)}",
-                    escape_markdown(lastfm["album"]["name"].upper())
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"].upper())
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace("{upper(track)}", escape_markdown(lastfm["name"].upper()))
                 .replace(
@@ -481,15 +509,19 @@ class EmbedScript:
                 )
                 .replace(
                     "{title(album)}",
-                    escape_markdown(lastfm["album"]["name"].title())
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"].title())
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace(
                     "{title(album.name)}",
-                    escape_markdown(lastfm["album"]["name"].title())
-                    if lastfm.get("album")
-                    else "",
+                    (
+                        escape_markdown(lastfm["album"]["name"].title())
+                        if lastfm.get("album")
+                        else ""
+                    ),
                 )
                 .replace("{title(track)}", escape_markdown(lastfm["name"].title()))
                 .replace(
@@ -878,9 +910,7 @@ class EmbedScript:
             return (
                 "embed"
                 if not suffix
-                else "an **embed message**"
-                if bold
-                else "an embed"
+                else "an **embed message**" if bold else "an embed"
             )
         return "text" if not suffix else "a **text message**" if bold else "a text"
 

@@ -1018,7 +1018,7 @@ class lastfm(Cog):
             title=f"{username} - {target_username}",
             description=(
                 (
-                    f"You both have **{Plural(mutual_artists):artist}** ({percentage(len(mutual_artists), len(largest_library))}) in common\n>>> ```\n"
+                    f"You both have **{Plural(mutual_artists):artist}** ({percentage(len(mutual_artists), len(largest_library))}) in common\n```\n"
                     + "\n".join(mutual_artists[:10])
                 )
                 + "```"
@@ -1067,9 +1067,11 @@ class lastfm(Cog):
             )
 
         await ctx.neutral(
-            f"You have **{Plural(data.get('plays')):play}** for **{data.get('name')}**"
-            if ctx.author == member
-            else f"**{member}** has **{Plural(data.get('plays')):play}** for **{data.get('name')}**",
+            (
+                f"You have **{Plural(data.get('plays')):play}** for **{data.get('name')}**"
+                if ctx.author == member
+                else f"**{member}** has **{Plural(data.get('plays')):play}** for **{data.get('name')}**"
+            ),
             emoji="🎵",
             color=self.get_color(ctx, config),
         )
@@ -1125,9 +1127,11 @@ class lastfm(Cog):
             )
 
         await ctx.neutral(
-            f"You have **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**"
-            if ctx.author == member
-            else f"**{member}** has **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**",
+            (
+                f"You have **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**"
+                if ctx.author == member
+                else f"**{member}** has **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**"
+            ),
             emoji="🎵",
             color=self.get_color(ctx, config),
         )
@@ -1188,9 +1192,11 @@ class lastfm(Cog):
             )
 
         await ctx.neutral(
-            f"You have **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**"
-            if ctx.author == member
-            else f"**{member}** has **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**",
+            (
+                f"You have **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**"
+                if ctx.author == member
+                else f"**{member}** has **{Plural(data.get('plays')):play}** for **{data.get('name')}** by **{data.get('artist')}**"
+            ),
             emoji="🎵",
             color=self.get_color(ctx, config),
         )

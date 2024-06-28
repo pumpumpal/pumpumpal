@@ -638,7 +638,7 @@ class Servers(Cog):
         name="add",
         usage="(channel) (message)",
         example="#chat Thx {user.mention} :3",
-        aliases=["set"],
+        aliases=["set", "create"],
         parameters={
             "self_destruct": {
                 "converter": int,
@@ -648,7 +648,6 @@ class Servers(Cog):
                 "aliases": ["delete_after", "delete"],
             }
         },
-        aliases=["create"],
     )
     @has_permissions(manage_guild=True)
     async def boost_add(

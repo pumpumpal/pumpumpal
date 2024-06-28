@@ -10,21 +10,21 @@ from tools.pumpumpal import pumpumpal
 
 
 class Webserver(Cog):
-    def __init__(self: 'Webserver', bot: pumpumpal):
+    def __init__(self: "Webserver", bot: pumpumpal):
         self.bot: pumpumpal = bot
 
         self.app = Application()
-        self.app.router.add_get('/', self.index)
-        self.app.router.add_get('/avatars/{user_id}', self.avatars)
-        self.app.router.add_get('/names/{user_id}', self.names)
-        self.app.router.add_get('/commands', self.commands)
+        self.app.router.add_get("/", self.index)
+        self.app.router.add_get("/avatars/{user_id}", self.avatars)
+        self.app.router.add_get("/names/{user_id}", self.names)
+        self.app.router.add_get("/commands", self.commands)
         self.cors = aiohttp_cors.setup(
             self.app,
             defaults={
-                '*': aiohttp_cors.ResourceOptions(
+                "*": aiohttp_cors.ResourceOptions(
                     allow_credentials=True,
-                    expose_headers='*',
-                    allow_headers='*',
+                    expose_headers="*",
+                    allow_headers="*",
                 )
             },
         )
@@ -33,99 +33,93 @@ class Webserver(Cog):
         for route in list(self.app.router.routes()):
             self.cors.add(route)
 
-    async def cog_load(self: 'Webserver'):
+    async def cog_load(self: "Webserver"):
         self.loop.create_task(
             _run_app(
                 self.app,
-                host='0.0.0.0',
+                host="0.0.0.0",
                 port=59076,
                 access_log=None,
                 print=None,
             )
         )
 
-    async def names(self: 'Webserver', request: Request) -> Response:
-        if not DISCORD_ID.match(str(request.match_info['user_id'])):
-            return json_response({'error': 'Invalid user ID'}, status=400)
+    async def names(self: "Webserver", request: Request) -> Response:
+        if not DISCORD_ID.match(str(request.match_info["user_id"])):
+            return json_response({"error": "Invalid user ID"}, status=400)
 
         names = await self.bot.db.fetch(
-            'SELECT name, timestamp FROM metrics.names WHERE user_id = $1 ORDER BY timestamp DESC',
-            int(request.match_info['user_id']),
+            "SELECT name, timestamp FROM metrics.names WHERE user_id = $1 ORDER BY timestamp DESC",
+            int(request.match_info["user_id"]),
         )
         if not names:
-            return json_response({'error': 'User not found'}, status=404)
+            return json_response({"error": "User not found"}, status=404)
 
         return json_response(
             {
-                'user_id': int(request.match_info['user_id']),
-                'names': [name['name'] for name in names],
-                'user': {
-                    'name': user.name,
-                    'avatar': user.display_avatar.url,
-                }
-                if (
-                    user := self.bot.get_user(
-                        int(request.match_info['user_id'])
-                    )
-                )
-                else {
-                    'name': 'Unknown User',
-                    'avatar': self.bot.user.display_avatar.url,
-                },
+                "user_id": int(request.match_info["user_id"]),
+                "names": [name["name"] for name in names],
+                "user": (
+                    {
+                        "name": user.name,
+                        "avatar": user.display_avatar.url,
+                    }
+                    if (user := self.bot.get_user(int(request.match_info["user_id"])))
+                    else {
+                        "name": "Unknown User",
+                        "avatar": self.bot.user.display_avatar.url,
+                    }
+                ),
             },
             dumps=lambda x: dumps(x, option=2).decode(),
         )
 
-    async def avatars(self: 'Webserver', request: Request) -> Response:
-        if not DISCORD_ID.match(str(request.match_info['user_id'])):
-            return json_response({'error': 'Invalid user ID'}, status=400)
+    async def avatars(self: "Webserver", request: Request) -> Response:
+        if not DISCORD_ID.match(str(request.match_info["user_id"])):
+            return json_response({"error": "Invalid user ID"}, status=400)
 
         avatars = await self.bot.db.fetch(
-            'SELECT avatar FROM metrics.avatars WHERE user_id = $1 ORDER BY timestamp DESC',
-            int(request.match_info['user_id']),
+            "SELECT avatar FROM metrics.avatars WHERE user_id = $1 ORDER BY timestamp DESC",
+            int(request.match_info["user_id"]),
         )
         if not avatars:
-            return json_response({'error': 'User not found'}, status=404)
+            return json_response({"error": "User not found"}, status=404)
 
         return json_response(
             {
-                'user_id': int(request.match_info['user_id']),
-                'avatars': [avatar['avatar'] for avatar in avatars],
-                'user': {
-                    'name': user.name,
-                    'avatar': user.display_avatar.url,
-                }
-                if (
-                    user := self.bot.get_user(
-                        int(request.match_info['user_id'])
-                    )
-                )
-                else {
-                    'name': 'Unknown User',
-                    'avatar': self.bot.user.display_avatar.url,
-                },
+                "user_id": int(request.match_info["user_id"]),
+                "avatars": [avatar["avatar"] for avatar in avatars],
+                "user": (
+                    {
+                        "name": user.name,
+                        "avatar": user.display_avatar.url,
+                    }
+                    if (user := self.bot.get_user(int(request.match_info["user_id"])))
+                    else {
+                        "name": "Unknown User",
+                        "avatar": self.bot.user.display_avatar.url,
+                    }
+                ),
             },
             dumps=lambda x: dumps(x, option=2).decode(),
         )
 
-    def walk_commands(self: 'Webserver') -> list:
+    def walk_commands(self: "Webserver") -> list:
         for command in self.bot.walk_commands():
             if (
                 (cog := command.cog_name)
-                and cog.lower() in ('jishaku', 'developer', 'webserver')
+                and cog.lower() in ("jishaku", "developer", "webserver")
                 or command.hidden
             ):
                 continue
 
             yield command
 
-    async def commands(self: 'Webserver', request: Request) -> Response:
-        output = '\n'
+    async def commands(self: "Webserver", request: Request) -> Response:
+        output = "\n"
 
-        for name, cog in sorted(
-            self.bot.cogs.items(), key=lambda c: c[0].lower()
-        ):
-            if name.lower() in ('jishaku', 'developer', 'webserver'):
+        for name, cog in sorted(self.bot.cogs.items(), key=lambda c: c[0].lower()):
+            if name.lower() in ("jishaku", "developer", "webserver"):
                 continue
 
             _commands = []
@@ -133,11 +127,9 @@ class Webserver(Cog):
                 if command.hidden:
                     continue
 
-                usage = f' {command.usage}' if command.usage else ''
+                usage = f" {command.usage}" if command.usage else ""
                 aliases = (
-                    '[' + '|'.join(command.aliases) + ']'
-                    if command.aliases
-                    else ''
+                    "[" + "|".join(command.aliases) + "]" if command.aliases else ""
                 )
                 if isinstance(command, Group) and not command.root_parent:
                     _commands.append(
@@ -157,29 +149,29 @@ class Webserver(Cog):
                     )
 
             if _commands:
-                output += f'┌── {name}\n' + '\n'.join(_commands) + '\n'
+                output += f"┌── {name}\n" + "\n".join(_commands) + "\n"
 
         return json_response(
             {
-                'bot': {
-                    'name': self.bot.user.name,
-                    'avatar': self.bot.user.display_avatar.url,
+                "bot": {
+                    "name": self.bot.user.name,
+                    "avatar": self.bot.user.display_avatar.url,
                 },
-                'commands': output,
+                "commands": output,
             },
             dumps=lambda x: dumps(x, option=2).decode(),
         )
 
-    async def index(self: 'Webserver', request: Request) -> Response:
+    async def index(self: "Webserver", request: Request) -> Response:
         return json_response(
             {
-                'bot': {
-                    'name': self.bot.user.name,
-                    'avatar': self.bot.user.display_avatar.url,
+                "bot": {
+                    "name": self.bot.user.name,
+                    "avatar": self.bot.user.display_avatar.url,
                 },
-                'commands': f'{request.url}commands',
-                'names': f'{request.url}names/<user_id>',
-                'avatars': f'{request.url}avatars/<user_id>',
+                "commands": f"{request.url}commands",
+                "names": f"{request.url}names/<user_id>",
+                "avatars": f"{request.url}avatars/<user_id>",
             },
             dumps=lambda x: dumps(x, option=3).decode(),
         )

@@ -114,9 +114,9 @@ class Information(Cog):
             inline=True,
         )
         embed.set_footer(
-        text="pumpumpal | (Legacy) Shiro, made by igna.",
-        icon_url="https://git.sr.ht/~igna/shiro-old"
-    )
+            text="pumpumpal | (Legacy) Shiro, made by igna.",
+            icon_url="https://git.sr.ht/~igna/shiro-old",
+        )
         await ctx.send(embed=embed)
 
     @command(
@@ -264,7 +264,7 @@ class Information(Cog):
         embed.add_field(
             name="Information",
             value=(
-                f">>> **Owner:** {server.owner or server.owner_id}"
+                f"**Owner:** {server.owner or server.owner_id}"
                 + f"\n**Shard ID:** {server.shard_id}"
                 + f"\n**Verification:** {server.verification_level.name.title()}"
                 + f"\n**Notifications:** {'Mentions' if server.default_notifications == NotificationLevel.only_mentions else 'All Messages'}"
@@ -274,7 +274,7 @@ class Information(Cog):
         embed.add_field(
             name="Statistics",
             value=(
-                f">>> **Members:** {server.member_count:,}"
+                f"**Members:** {server.member_count:,}"
                 + f"\n**Text Channels:** {len(server.text_channels):,}"
                 + f"\n**Voice Channels:** {len(server.voice_channels):,}"
                 + f"\n**Nitro Boosts:** {server.premium_subscription_count:,} (`Level {server.premium_tier}`)"
@@ -285,7 +285,7 @@ class Information(Cog):
         if server == ctx.guild and (roles := list(reversed(server.roles[1:]))):
             embed.add_field(
                 name=f"Roles ({len(roles)})",
-                value=">>> "
+                value=""
                 + ", ".join([role.mention for role in roles[:7]])
                 + (f" (+{comma(len(roles) - 7)})" if len(roles) > 7 else ""),
                 inline=False,
@@ -333,7 +333,7 @@ class Information(Cog):
         embed.add_field(
             name="Invite",
             value=(
-                f">>> **Channel:** {f'#{invite.channel.name}' if invite.channel else 'N/A'}"
+                f"**Channel:** {f'#{invite.channel.name}' if invite.channel else 'N/A'}"
                 + f"\n**Inviter:** {invite.inviter or 'N/A'}"
             ),
             inline=True,
@@ -341,7 +341,7 @@ class Information(Cog):
         embed.add_field(
             name="Server",
             value=(
-                f">>> **Members:** {invite.approximate_member_count:,}"
+                f"**Members:** {invite.approximate_member_count:,}"
                 + f"\n**Members Online:** {invite.approximate_presence_count:,}"
             ),
             inline=True,
@@ -404,7 +404,7 @@ class Information(Cog):
             if voice := user.voice:
                 members = len(voice.channel.members) - 1
 
-                embed.description = f"> {voice.channel.mention} " + (
+                embed.description = f"{voice.channel.mention} " + (
                     f"with {Plural(members):other}" if members else "by themselves"
                 )
 
@@ -609,9 +609,11 @@ class Information(Cog):
 
         timestamp = utcnow().astimezone(pytz.timezone(location))
         await ctx.neutral(
-            f"Your current time is **{timestamp.strftime('%b %d, %I:%M %p')}**"
-            if member == ctx.author
-            else f"**{member}**'s current time is **{timestamp.strftime('%b %d, %I:%M %p')}**",
+            (
+                f"Your current time is **{timestamp.strftime('%b %d, %I:%M %p')}**"
+                if member == ctx.author
+                else f"**{member}**'s current time is **{timestamp.strftime('%b %d, %I:%M %p')}**"
+            ),
             emoji=":clock"
             + str(timestamp.strftime("%-I"))
             + ("30" if int(timestamp.strftime("%-M")) >= 30 else "")
@@ -669,7 +671,7 @@ class Information(Cog):
         )
 
         embed = Embed(
-            url=response.html_url,
+            url=f"https://github.com/{username}",
             title=(
                 f"{response.name} (@{response.login})"
                 if response.name
@@ -878,9 +880,11 @@ class Information(Cog):
             )
 
         await ctx.neutral(
-            f"Your birthday is {phrase}"
-            if member == ctx.author
-            else f"**{member}**'s birthday is {phrase}",
+            (
+                f"Your birthday is {phrase}"
+                if member == ctx.author
+                else f"**{member}**'s birthday is {phrase}"
+            ),
             emoji="🎂",
         )
 
