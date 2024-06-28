@@ -1,42 +1,19 @@
-
 # pumpumpal (beta)
 
-A simple, easy to use, and powerful Discord bot.
+> A simple, easy to use, and powerful Discord bot.
 
+## Features
 
+- **Lookup commands:** Get user avatars and names by ID.
+- **API:** Access bot data and functionality programmatically.
+- **Website:** Explore bot information and documentation.
+- **Support:** Get help via email or Discord server.
 
+## API Usage (api.pumpumpal.lol)
 
-## TODO
-
-- [ ]  Fix lookup commands 
-- [ ]  Fix API
-- [ ]  Add sily commands
-- [ ]  Move into slash
-- [x]  Buy a domain
-- [x]  Website 
-
-
-## API Usage
-
-(api.pumpumpal.lol)
-#### Get commands
-
-```http
-  GET /commands
-```
-
-#### Get avatars by User ID
-
-```http
-  GET /avatars/{id}
-```
-
-#### Get names by User ID
-
-```http
-  GET /names/{id}
-```
-
+- **Get commands:** `GET /commands`
+- **Get avatars by User ID:** `GET /avatars/{id}`
+- **Get names by User ID:** `GET /names/{id}`
 
 ## Authors
 
@@ -44,14 +21,18 @@ A simple, easy to use, and powerful Discord bot.
 - [@gvvq](https://www.github.com/gvvq)
 - [@ignaigna](https://github.com/ignaigna/)
 
-## Other repositories
-- [Website](https://github.com/angelizado/pumpumpal-web/)
-- [Ohhq Scripts](https://github.com/gvvq/script)
+## Repositories
 
+- **Website:** https://github.com/angelizado/pumpumpal-web/
+- **Ohhq Scripts:** https://github.com/gvvq/script
 
 ## Support
 
-For support, email angels@cock.li or join our [Discord Server](https://pumpumpal-web.vercel.app/support)
+- **Email:** support@pumpumpal.lol
+- **Discord:** https://pumpumpal.lol/support
+- **Website:** https://pumpumpal.lol
 
-### [- pumpumpal.lol](https://www.pumpumpal.lol)
+## TODO
 
+- Add silly commands.
+- Transition commands to slash commands.

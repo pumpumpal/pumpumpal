@@ -89,7 +89,7 @@ def _collage_open(image: BytesIO):
 
 
 async def _collage_read(image: str):
-    async with (ClientSession() as session, session.get(image) as response):
+    async with ClientSession() as session, session.get(image) as response:
         try:
             return await _collage_open(BytesIO(await response.read()))
         except Exception:

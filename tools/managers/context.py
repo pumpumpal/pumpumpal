@@ -181,9 +181,9 @@ class Context(BaseContext):
         if content := (args[0] if args else kwargs.get("content")):
             content = str(content)
             if len(content) > 4000:
-                kwargs[
-                    "content"
-                ] = f"Response too large to send (`{len(content)}/4000`)"
+                kwargs["content"] = (
+                    f"Response too large to send (`{len(content)}/4000`)"
+                )
                 kwargs["files"].append(
                     File(
                         StringIO(content),
@@ -290,9 +290,8 @@ class Context(BaseContext):
             "color", config.Color.neutral
         )
 
-        sign = "> " if "\n>" not in description else ""
         embed = Embed(
-            description=f"{sign} {emoji} {self.author.mention}: {description}",
+            description=f"{emoji} {self.author.mention}: {description}",
             color=color,
             **kwargs,
         )
@@ -318,9 +317,8 @@ class Context(BaseContext):
             "color", config.Color.approval
         )
 
-        sign = "> " if "\n>" not in description else ""
         embed = Embed(
-            description=f"{sign} {self.author.mention}: {description}",
+            description=f"{self.author.mention}: {description}",
             color=color,
             **kwargs,
         )
@@ -344,17 +342,16 @@ class Context(BaseContext):
         color = reskin.get("colors", {}).get("main") or kwargs.pop(
             "color", config.Color.error
         )
-        sign = "> " if "\n>" not in description else ""
         embed = Embed(
-            description=f"{sign} {self.author.mention}: {description}",
+            description=f"{self.author.mention}: {description}",
             color=color,
             **kwargs,
         )
-        
+
         # set if provided
         if thumbnail_url:
             embed.set_thumbnail(url=thumbnail_url)
-        
+
         if previous_load := getattr(self, "previous_load", None):
             cancel_load = kwargs.pop("cancel_load", False)
             result = await previous_load.edit(embed=embed, **kwargs)
@@ -370,10 +367,9 @@ class Context(BaseContext):
         color = reskin.get("colors", {}).get("load") or kwargs.pop(
             "color", config.Color.neutral
         )
-        sign = "> " if "\n>" not in message else ""
         embed = Embed(
             color=color,
-            description=f"{sign} {message}",
+            description=f"{message}",
         )
         if not getattr(self, "previous_load", None):
             message = await self.send(embed=embed, **kwargs)
@@ -561,5 +557,4 @@ class ParameterParser:
 
 class FlagConverter(
     DefaultFlagConverter, case_insensitive=True, prefix="--", delimiter=" "
-):
-    ...
+): ...

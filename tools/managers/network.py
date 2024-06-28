@@ -38,11 +38,6 @@ class ClientSession(Session):
         if response.content_type == "text/html":
             return BeautifulSoup(await response.text(), "html.parser")
 
-        if response.content_type.startswith(
-            ("image/", "video/", "audio/", "application/")
-        ):
-            return await response.read()
-
         if response.content_type in (
             "application/json",
             "text/javascript",
@@ -50,4 +45,11 @@ class ClientSession(Session):
         ):
             data: dict = await response.json(content_type=response.content_type)
             return DefaultMunch.fromDict(data)
+
+
+        if response.content_type.startswith(
+            ("image/", "video/", "audio/", "application/")
+        ):
+            return await response.read()
+
         return response

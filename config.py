@@ -1,9 +1,9 @@
-token: str = "MTI0NzQ5OTUzMjk1MDk2NjMxMw.G0EwjV.nqtX8DZGa1Iq7A_l9igV0MphSoCCANhLMg4Rsg"
+token: str = "MTI0NzU5MjQ4MDgwNzk4MTA5Ng.Go1j6f.UPY19tvz5GlqZKs1h5PyP_Sl6Y2BVeX37IUsx4"
 # DEV - "MTI0NzU5MjQ4MDgwNzk4MTA5Ng.Go1j6f.UPY19tvz5GlqZKs1h5PyP_Sl6Y2BVeX37IUsx4"
 # MAIN - "MTI0NzQ5OTUzMjk1MDk2NjMxMw.G0EwjV.nqtX8DZGa1Iq7A_l9igV0MphSoCCANhLMg4Rsg"
 
 prefix: str = ","
-owners: list[int] = [1183542863578013788]
+owners: list[int] = [1183542863578013788, 213743026026184704]
 
 
 class Color:
@@ -24,7 +24,7 @@ class Emoji:
         unlock: str = "<:unlock:1247534688415776950>"
         ghost: str = "<:ghost:1247534687035985931>"
         reveal: str = "<:reveal:1247535372813205596>"
-        claim: str = "<:claim:1247534713321689139>"  # TODO: Fix typo
+        claim: str = "<:claim:1247534713321689139>"
         disconnect: str = "<:disconnect:1247535369877061654>"
         activity: str = "<:activity:1247534709433565286>"
         information: str = "<:info:1247535367435845745>"
