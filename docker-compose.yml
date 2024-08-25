@@ -7,7 +7,6 @@ services:
     depends_on:
       - postgres
       - redis
-      - cloudflared # otherwise the bot won't be able to connect to the internet
     env_file:
       - .env
     expose:
@@ -52,17 +51,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  cloudflared:
-    container_name: cloudflared-pumpumpal
-    hostname: cloudflared.pumpumpal.local
-    image: cloudflare/cloudflared:latest
-    restart: always
-    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TOKEN}
-    env_file:
-      - .env
-    networks:
-      - pumpumpal
 
 volumes:
   db:

@@ -37,11 +37,11 @@ class Emoji:
 
 
 class Database:
-    host: str = "127.0.0.1"
+    host: str = "postgres.pumpumpal.local"
     port: int = 5432
-    name: str = "sexytea69"
-    user: str = "postgres"
-    password: str = "cafesitos69"
+    name: str = "pumpumpal"
+    user: str = "blez"
+    password: str = "n5d3M9SzK0WYE28"
 
 
 class Webserver:
