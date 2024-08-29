@@ -46,7 +46,7 @@ class Database:
 
 class Webserver:
     host: str = "0.0.0.0"
-    port: int = 59076
+    port: int = 1337
 
 
 class Authorization:
