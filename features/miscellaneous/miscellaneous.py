@@ -1329,98 +1329,74 @@ class Miscellaneous(Cog):
                     file=File(temp_file_output, filename="pumpumpalTransparent.png")
                 )
 
-    @command(
+    @commands.command(
         name="screenshot",
         aliases=["ss"],
         usage="(url) <flags>",
         example="https://shiro.wtf --full-page --delay 5",
     )
-    @cooldown(1, 5, BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def screenshot(
         self: "Miscellaneous",
-        ctx: Context,
-        url: URL,
+        ctx: commands.Context,
+        url: str,
         *,
-        flags: ScreenshotFlags,
+        flags: Optional[dict] = None,
     ):
-        """Takes a screenshot of a website."""
+        """Takes a screenshot of a website using ScreenshotOne API."""
 
-        if not url.scheme or "." not in url.host:
-            return await ctx.error("The URL provided didn't pass validation!")
+        if not url.startswith("http"):
+            return await ctx.send("The URL provided is invalid!")
 
-        await Domain().convert(ctx, str(url))
+        # Default flags if not provided
+        flags = flags or {}
+        full_page = flags.get("full_page", False)
+        delay = int(flags.get("delay", 0))
+
+        api_url = "https://api.screenshotone.com/take"
+        params = {
+            "access_key": "JIpTxMx2dFvQ5A",
+            "url": url,
+            "full_page": str(full_page).lower(),
+            "viewport_width": "1920",
+            "viewport_height": "1080",
+            "device_scale_factor": "1",
+            "format": "jpg",
+            "image_quality": "80",
+            "block_ads": "true",
+            "block_cookie_banners": "true",
+            "block_banners_by_heuristics": "false",
+            "block_trackers": "true",
+            "delay": str(delay),
+            "timeout": "60",
+        }
 
         async with ctx.typing():
-            await self.openChrome()
-
-            page = await self.browser.newPage()
-            await page.setViewport(
-                {
-                    "width": 2560,
-                    "height": 1440,
-                }
-            )
-            await page.setUserAgent(
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            )
-
             try:
-                await page.goto(
-                    url=str(url),
-                    options={
-                        "timeout": 15e3,
-                        "wait_until": "networkidle0",
-                    },
-                )
-            except (PageError, PTimeoutError, NetworkError):
-                await self.exitChrome()
-                return await ctx.error(f"Host [`{url.host}`]({url}) is not reachable!")
+                response = requests.get(api_url, params=params)
 
-            if isinstance(ctx.channel, TextChannel):
-                try:
-                    content = await page.content()
-                except Exception:
-                    await self.exitChrome()
-                    return await ctx.error(
-                        f"Host [`{url.host}`]({url}) is not reachable!"
-                    )
-                if (
-                    any(
-                        keyword in content
-                        for keyword in ["xxx", "hentai", "porn", "gore", "nsfw", "thug"]
-                    )
-                    and not ctx.channel.is_nsfw()
-                ):
-                    await self.exitChrome()
-                    return await ctx.error(
-                        f"Host [`{url.host}`]({url}) contains NSFW content!"
+                if response.status_code == 200:
+                    # Send the image back in the Discord channel
+                    buffer = BytesIO(response.content)
+                    buffer.seek(0)
+
+                    embed = Embed(description=f"> [*`{url}`*]")
+                    embed.set_image(url="attachment://screenshot.jpg")
+                    embed.set_footer(
+                        text=(
+                            f"Requested by {ctx.author}"
+                            + (f" ∙ {delay}s delay" if delay else "")
+                            + (" ∙ Full page" if full_page else "")
+                        ),
                     )
 
-            await sleep(flags.delay)
-            buffer: bytes = await page.screenshot(
-                options={
-                    "fullPage": flags.full_page,
-                },
-            )
-            await self.exitChrome()
-
-        embed = Embed(description=f"> [*`{url.host}`*]({url})")
-        embed.set_image(url="attachment://screenshot.png")
-        embed.set_footer(
-            text=(
-                f"Requested by {ctx.author}"
-                + (f" ∙ {delay}s delay" if (delay := flags.delay) else "")
-                + (" ∙ Full page" if flags.full_page else "")
-            ),
-        )
-
-        return await ctx.send(
-            embed=embed,
-            file=File(
-                BytesIO(buffer),
-                filename="screenshot.png",
-            ),
-        )
+                    await ctx.send(
+                        embed=embed,
+                        file=File(
+                            buffer,
+                            filename="screenshot.jpg",
+                        ),
+                    )
 
     @group(
         name="compile",
