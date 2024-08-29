@@ -65,7 +65,7 @@ class Miscellaneous(Cog):
         self.bot: "pumpumpal" = bot
         self.browser: Browser
 
-    async def screenshot(self, ctx: command.Context, url: str, flags: ScreenshotFlags):
+    async def screenshot(self: "Miscellaneous"):
         # Construct the API URL with your parameters
         api_url = "https://api.screenshotone.com/take"
         params = {
