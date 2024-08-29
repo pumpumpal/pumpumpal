@@ -1338,7 +1338,7 @@ class Miscellaneous(Cog):
 
     async def screenshot(
         self: "Miscellaneous",
-        ctx: command.Context,
+        ctx: Context,
         url: str,
         *,
         flags: Optional[dict] = None,
