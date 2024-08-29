@@ -1397,7 +1397,6 @@ class Miscellaneous(Cog):
                             filename="screenshot.jpg",
                         ),
                     )
-
     @group(
         name="compile",
         aliases=[
