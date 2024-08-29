@@ -46,30 +46,12 @@ from tools.utilities.process import ensure_future
 from tools.utilities.text import hash
 
 
-class ScreenshotFlags(FlagConverter):
-    delay: Range[int, 1, 10] = flag(
-        description="The amount of seconds to let the page render.",
-        default=0,
-    )
-
-    full_page: bool = flag(
-        description="Whether or not to take a screenshot of the entire page.",
-        default=False,
-    )
-
-
 class Miscellaneous(Cog):
     """Cog for Miscellaneous commands."""
 
     def __init__(self: "Miscellaneous", bot: "pumpumpal"):
         self.bot: "pumpumpal" = bot
         self.browser: Browser
-
-    async def screenshot(self: "Miscellaneous"):
-        api_url = "https://api.screenshotone.com/take"
-        params = {
-            "access_key": "JIpTxMx2dFvQ5A",
-        }
 
     @Cog.listener("on_user_message")
     async def sticky_message_dispatcher(
