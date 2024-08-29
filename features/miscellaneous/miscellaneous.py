@@ -1360,7 +1360,7 @@ class Miscellaneous(Cog):
             "full_page": str(full_page).lower(),
             "viewport_width": "1920",
             "viewport_height": "1080",
-            "device_scale_factor": "1",
+            "device_scale_factor": "3",
             "format": "jpg",
             "image_quality": "80",
             "block_ads": "true",
