@@ -16,7 +16,7 @@ from discord import (CategoryChannel, Embed, File, Forbidden, HTTPException,
 from discord.ext.commands import (BucketType, MissingPermissions, Range,
                                   command, cooldown, flag, group,
                                   has_permissions, max_concurrency, param)
-from discord.ext.tasks import loop
+from discord.ext.tasks import aiohttp, loop
 from discord.utils import (as_chunks, escape_markdown, escape_mentions, find,
                            format_dt, utcnow)
 from jishaku.codeblocks import Codeblock, codeblock_converter
@@ -1329,16 +1329,16 @@ class Miscellaneous(Cog):
                     file=File(temp_file_output, filename="pumpumpalTransparent.png")
                 )
 
-    @commands.command(
+    @command(
         name="screenshot",
         aliases=["ss"],
         usage="(url) <flags>",
         example="https://shiro.wtf --full-page --delay 5",
     )
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @command.cooldown(1, 5, command.BucketType.user)
     async def screenshot(
         self: "Miscellaneous",
-        ctx: commands.Context,
+        ctx: command.Context,
         url: str,
         *,
         flags: Optional[dict] = None,
@@ -1372,31 +1372,36 @@ class Miscellaneous(Cog):
         }
 
         async with ctx.typing():
-            try:
-                response = requests.get(api_url, params=params)
+            async with aiohttp.ClientSession() as session:
+                try:
+                    async with session.get(api_url, params=params) as response:
+                        if response.status == 200:
+                            buffer = BytesIO(await response.read())
+                            buffer.seek(0)
 
-                if response.status_code == 200:
-                    # Send the image back in the Discord channel
-                    buffer = BytesIO(response.content)
-                    buffer.seek(0)
+                            embed = Embed(description=f"> [*`{url}`*]")
+                            embed.set_image(url="attachment://screenshot.jpg")
+                            embed.set_footer(
+                                text=(
+                                    f"Requested by {ctx.author}"
+                                    + (f" ∙ {delay}s delay" if delay else "")
+                                    + (" ∙ Full page" if full_page else "")
+                                ),
+                            )
 
-                    embed = Embed(description=f"> [*`{url}`*]")
-                    embed.set_image(url="attachment://screenshot.jpg")
-                    embed.set_footer(
-                        text=(
-                            f"Requested by {ctx.author}"
-                            + (f" ∙ {delay}s delay" if delay else "")
-                            + (" ∙ Full page" if full_page else "")
-                        ),
-                    )
+                            await ctx.send(
+                                embed=embed,
+                                file=File(
+                                    buffer,
+                                    filename="screenshot.jpg",
+                                ),
+                            )
+                        else:
+                            await ctx.send(f"Failed to take screenshot. Status code: {response.status}")
 
-                    await ctx.send(
-                        embed=embed,
-                        file=File(
-                            buffer,
-                            filename="screenshot.jpg",
-                        ),
-                    )
+                except Exception as e:
+                    await ctx.send(f"An error occurred: {e}")
+
     @group(
         name="compile",
         aliases=[
