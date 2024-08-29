@@ -69,6 +69,7 @@ class Miscellaneous(Cog):
         api_url = "https://api.screenshotone.com/take"
         params = {
             "access_key": "JIpTxMx2dFvQ5A",
+        }
 
     @Cog.listener("on_user_message")
     async def sticky_message_dispatcher(
