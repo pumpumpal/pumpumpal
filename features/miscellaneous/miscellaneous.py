@@ -1335,7 +1335,7 @@ class Miscellaneous(Cog):
         usage="(url) <flags>",
         example="https://shiro.wtf --full-page --delay 5",
     )
-    @command.cooldown(1, 5, command.BucketType.user)
+
     async def screenshot(
         self: "Miscellaneous",
         ctx: command.Context,
