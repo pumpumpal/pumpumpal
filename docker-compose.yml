@@ -1,7 +1,7 @@
 services:
   bot:
-    container_name: pumpumpal
-    hostname: bot.pumpumpal.local
+    container_name: pumpumpal-dev
+    hostname: bot-dev.pumpumpal.local
     build: .
     restart: always
     depends_on:
@@ -15,7 +15,7 @@ services:
       - pumpumpal
 
   postgres:
-    container_name: postgres-pumpumpal
+    container_name: postgres-pumpumpal-dev
     hostname: postgres.pumpumpal.local
     image: postgres:alpine
     restart: always
@@ -34,7 +34,7 @@ services:
       retries: 5
 
   redis:
-    container_name: redis-pumpumpal
+    container_name: redis-pumpumpal-dev
     hostname: redis.pumpumpal.local
     image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
     restart: always
@@ -55,7 +55,6 @@ services:
 volumes:
   db:
   dragonflydata:
-
 
 networks:
   pumpumpal:
