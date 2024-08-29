@@ -66,42 +66,9 @@ class Miscellaneous(Cog):
         self.browser: Browser
 
     async def screenshot(self: "Miscellaneous"):
-        # Construct the API URL with your parameters
         api_url = "https://api.screenshotone.com/take"
         params = {
             "access_key": "JIpTxMx2dFvQ5A",
-            "url": url,
-            "full_page": str(flags.full_page).lower(),  # Convert boolean to 'true' or 'false'
-            "viewport_width": "1920",
-            "viewport_height": "1080",
-            "device_scale_factor": "1",
-            "format": "jpg",
-            "image_quality": "80",
-            "block_ads": "true",
-            "block_cookie_banners": "true",
-            "block_banners_by_heuristics": "false",
-            "block_trackers": "true",
-            "delay": str(flags.delay),
-            "timeout": "60",
-        }
-
-        try:
-            # Make the request to ScreenshotOne API
-            response = requests.get(api_url, params=params)
-
-            # Check if the request was successful
-            if response.status_code == 200:
-                # Convert the response content to an image
-                image = BytesIO(response.content)
-                image.seek(0)
-
-                # Send the image back in the Discord channel
-                await ctx.send(file=File(image, "screenshot.jpg"))
-            else:
-                await ctx.send(f"Failed to take screenshot. Status code: {response.status_code}")
-
-        except Exception as e:
-            await ctx.send(f"An error occurred: {e}")
 
     @Cog.listener("on_user_message")
     async def sticky_message_dispatcher(
