@@ -65,37 +65,43 @@ class Miscellaneous(Cog):
         self.bot: "pumpumpal" = bot
         self.browser: Browser
 
-    async def openChrome(self: "Miscellaneous"):
-        self.browser: Browser = await launch(
-            {
-                "executablePath": "/usr/bin/chromium",
-                "args": [
-                    "--ignore-certificate-errors",
-                    "--disable-extensions",
-                    "--no-sandbox",
-                    "--headless",
-                    "--disable-gpu",
-                    "--disable-dev-shm-usage",
-                    "--disable-setuid-sandbox",
-                    "--no-first-run",
-                    "--no-zygote",
-                    "--single-process",
-                    "--disable-accelerated-2d-canvas",
-                    "--disable-gpu-sandbox",
-                    "--hide-scrollbars",
-                    "--mute-audio",
-                ],
-            }
-        )
+    async def screenshot(self, ctx: commands.Context, url: str, flags: ScreenshotFlags):
+        # Construct the API URL with your parameters
+        api_url = "https://api.screenshotone.com/take"
+        params = {
+            "access_key": "JIpTxMx2dFvQ5A",
+            "url": url,
+            "full_page": str(flags.full_page).lower(),  # Convert boolean to 'true' or 'false'
+            "viewport_width": "1920",
+            "viewport_height": "1080",
+            "device_scale_factor": "1",
+            "format": "jpg",
+            "image_quality": "80",
+            "block_ads": "true",
+            "block_cookie_banners": "true",
+            "block_banners_by_heuristics": "false",
+            "block_trackers": "true",
+            "delay": str(flags.delay),
+            "timeout": "60",
+        }
 
-    async def exitChrome(self: "Miscellaneous"):
-        await self.browser.close()
+        try:
+            # Make the request to ScreenshotOne API
+            response = requests.get(api_url, params=params)
 
-    async def cog_load(self: "Miscellaneous"):
-        self.reminder.start()
+            # Check if the request was successful
+            if response.status_code == 200:
+                # Convert the response content to an image
+                image = BytesIO(response.content)
+                image.seek(0)
 
-    async def cog_unload(self: "Miscellaneous"):
-        self.reminder.stop()
+                # Send the image back in the Discord channel
+                await ctx.send(file=File(image, "screenshot.jpg"))
+            else:
+                await ctx.send(f"Failed to take screenshot. Status code: {response.status_code}")
+
+        except Exception as e:
+            await ctx.send(f"An error occurred: {e}")
 
     @Cog.listener("on_user_message")
     async def sticky_message_dispatcher(
