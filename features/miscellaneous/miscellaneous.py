@@ -16,7 +16,7 @@ from discord import (CategoryChannel, Embed, File, Forbidden, HTTPException,
 from discord.ext.commands import (BucketType, MissingPermissions, Range,
                                   command, cooldown, flag, group,
                                   has_permissions, max_concurrency, param)
-from discord.ext.tasks import loop
+from discord.ext.tasks import aiohttp, loop
 from discord.utils import (as_chunks, escape_markdown, escape_mentions, find,
                            format_dt, utcnow)
 from jishaku.codeblocks import Codeblock, codeblock_converter
@@ -46,56 +46,12 @@ from tools.utilities.process import ensure_future
 from tools.utilities.text import hash
 
 
-class ScreenshotFlags(FlagConverter):
-    delay: Range[int, 1, 10] = flag(
-        description="The amount of seconds to let the page render.",
-        default=0,
-    )
-
-    full_page: bool = flag(
-        description="Whether or not to take a screenshot of the entire page.",
-        default=False,
-    )
-
-
 class Miscellaneous(Cog):
     """Cog for Miscellaneous commands."""
 
     def __init__(self: "Miscellaneous", bot: "pumpumpal"):
         self.bot: "pumpumpal" = bot
         self.browser: Browser
-
-    async def openChrome(self: "Miscellaneous"):
-        self.browser: Browser = await launch(
-            {
-                "executablePath": "/usr/bin/chromium",
-                "args": [
-                    "--ignore-certificate-errors",
-                    "--disable-extensions",
-                    "--no-sandbox",
-                    "--headless",
-                    "--disable-gpu",
-                    "--disable-dev-shm-usage",
-                    "--disable-setuid-sandbox",
-                    "--no-first-run",
-                    "--no-zygote",
-                    "--single-process",
-                    "--disable-accelerated-2d-canvas",
-                    "--disable-gpu-sandbox",
-                    "--hide-scrollbars",
-                    "--mute-audio",
-                ],
-            }
-        )
-
-    async def exitChrome(self: "Miscellaneous"):
-        await self.browser.close()
-
-    async def cog_load(self: "Miscellaneous"):
-        self.reminder.start()
-
-    async def cog_unload(self: "Miscellaneous"):
-        self.reminder.stop()
 
     @Cog.listener("on_user_message")
     async def sticky_message_dispatcher(
@@ -1329,92 +1285,72 @@ class Miscellaneous(Cog):
         usage="(url) <flags>",
         example="https://shiro.wtf --full-page --delay 5",
     )
-    @cooldown(1, 5, BucketType.user)
+
     async def screenshot(
         self: "Miscellaneous",
         ctx: Context,
-        url: URL,
+        url: str,
         *,
-        flags: ScreenshotFlags,
+        flags: Optional[dict] = None,
     ):
-        """Takes a screenshot of a website."""
+        """Takes a screenshot of a website using ScreenshotOne API."""
 
-        if not url.scheme or "." not in url.host:
-            return await ctx.error("The URL provided didn't pass validation!")
+        if not url.startswith("http"):
+            return await ctx.send("The URL provided is invalid!")
 
-        await Domain().convert(ctx, str(url))
+        # Default flags if not provided
+        flags = flags or {}
+        full_page = flags.get("full_page", False)
+        delay = int(flags.get("delay", 0))
+
+        api_url = "https://api.screenshotone.com/take"
+        params = {
+            "access_key": "JIpTxMx2dFvQ5A",
+            "url": url,
+            "full_page": str(full_page).lower(),
+            "viewport_width": "1366",
+            "viewport_height": "768",
+            "device_scale_factor": "1",
+            "format": "jpg",
+            "image_quality": "80",
+            "block_ads": "true",
+            "block_cookie_banners": "true",
+            "block_banners_by_heuristics": "false",
+            "block_trackers": "true",
+            "delay": str(delay),
+            "timeout": "60",
+        }
 
         async with ctx.typing():
-            await self.openChrome()
-
-            page = await self.browser.newPage()
-            await page.setViewport(
-                {
-                    "width": 2560,
-                    "height": 1440,
-                }
-            )
-            await page.setUserAgent(
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            )
-
-            try:
-                await page.goto(
-                    url=str(url),
-                    options={
-                        "timeout": 15e3,
-                        "wait_until": "networkidle0",
-                    },
-                )
-            except (PageError, PTimeoutError, NetworkError):
-                await self.exitChrome()
-                return await ctx.error(f"Host [`{url.host}`]({url}) is not reachable!")
-
-            if isinstance(ctx.channel, TextChannel):
+            async with aiohttp.ClientSession() as session:
                 try:
-                    content = await page.content()
-                except Exception:
-                    await self.exitChrome()
-                    return await ctx.error(
-                        f"Host [`{url.host}`]({url}) is not reachable!"
-                    )
-                if (
-                    any(
-                        keyword in content
-                        for keyword in ["xxx", "hentai", "porn", "gore", "nsfw", "thug"]
-                    )
-                    and not ctx.channel.is_nsfw()
-                ):
-                    await self.exitChrome()
-                    return await ctx.error(
-                        f"Host [`{url.host}`]({url}) contains NSFW content!"
-                    )
+                    async with session.get(api_url, params=params) as response:
+                        if response.status == 200:
+                            buffer = BytesIO(await response.read())
+                            buffer.seek(0)
 
-            await sleep(flags.delay)
-            buffer: bytes = await page.screenshot(
-                options={
-                    "fullPage": flags.full_page,
-                },
-            )
-            await self.exitChrome()
+                            embed = Embed(description=f"> [*`{url}`*]")
+                            embed.set_image(url="attachment://screenshot.jpg")
+                            embed.set_footer(
+                                text=(
+                                    f"Requested by {ctx.author}"
+                                    + (f" ∙ {delay}s delay" if delay else "")
+                                    + (" ∙ Full page" if full_page else "")
+                                ),
+                            )
 
-        embed = Embed(description=f"> [*`{url.host}`*]({url})")
-        embed.set_image(url="attachment://screenshot.png")
-        embed.set_footer(
-            text=(
-                f"Requested by {ctx.author}"
-                + (f" ∙ {delay}s delay" if (delay := flags.delay) else "")
-                + (" ∙ Full page" if flags.full_page else "")
-            ),
-        )
+                            await ctx.send(
+                                embed=embed,
+                                file=File(
+                                    buffer,
+                                    filename="screenshot.jpg",
+                                ),
+                            )
+                        else:
+                            await ctx.send(f"Failed to take screenshot. Status code: {response.status}")
 
-        return await ctx.send(
-            embed=embed,
-            file=File(
-                BytesIO(buffer),
-                filename="screenshot.png",
-            ),
-        )
+                except Exception as e:
+                    await ctx.send(f"An error occurred: {e}")
 
     @group(
         name="compile",
